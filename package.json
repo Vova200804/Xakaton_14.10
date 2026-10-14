@@ -7,7 +7,7 @@
     "dev": "node --env-file-if-exists=.env scripts/server.mjs",
     "start": "node --env-file-if-exists=.env scripts/server.mjs",
     "build": "node scripts/check.mjs",
-    "test": "node tests/api.mjs && node tests/browser.mjs && node tests/flows.mjs && node tests/fidelity.mjs && node tests/account-navigation.mjs"
+    "test": "node tests/api.mjs && node tests/browser.mjs && node tests/flows.mjs && node tests/fidelity.mjs && node tests/account-navigation.mjs && node tests/motion.mjs"
   },
   "engines": {
     "node": "24.x"

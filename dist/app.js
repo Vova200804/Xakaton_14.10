@@ -1,4 +1,5 @@
 import {refineLayout,selectSection,paginateTables} from './fidelity.js';
+import {initMotion} from './motion.js';
 import { screens,projects as archiveProjects } from './data.js';
 import { S,esc,icon,link,button,roles,roleHome,screenMap,field,select,brand,date,imageFile,accountControl,name } from './ui.js';
 import { publicPages,archiveItems } from './public.js';
@@ -157,4 +158,4 @@ function onTab(tab){const bar=tab.closest('[data-tabs]')||tab.parentElement,key=
  if(key==='evaluation'&&i>0)modal(`<h2>${esc(tab.textContent)}</h2>${currentProject()?.files?.length?currentProject().files.map(f=>`<a class="btn wide" href="/api/files/${f.id}">${esc(f.name)} ${icon('download')}</a>`).join(''):'<p>Дополнительные файлы не загружены.</p>'}`);
  paginateTables(true);
 }
-document.querySelector('.dialog-close').addEventListener('click',close);dialog.addEventListener('close',()=>{if(!dialog.open)dialogBody.replaceChildren();});dialog.addEventListener('click',e=>{if(e.target===dialog)close();});window.addEventListener('hashchange',render);await render();
+document.querySelector('.dialog-close').addEventListener('click',close);dialog.addEventListener('close',()=>{if(!dialog.open)dialogBody.replaceChildren();});dialog.addEventListener('click',e=>{if(e.target===dialog)close();});window.addEventListener('hashchange',render);initMotion(app,dialog);await render();

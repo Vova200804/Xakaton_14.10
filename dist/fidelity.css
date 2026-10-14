@@ -67,4 +67,6 @@ body:is([data-route="dashboard"],[data-route="test-intro"],[data-route="test"],[
  [data-page="bear"] .hero-banner h1{font-weight:650;letter-spacing:-2px}[data-page="participate"] .hero-banner h1{font-weight:550;font-size:84px;line-height:1.04}[data-page="participate"] .hero-banner p{margin:8px 0}[data-page="participate"] .progress-steps{margin-top:-8px}[data-page="participate"] .progress-step>.mint-text{font-size:17px}[data-page="participate"] .partner-options{grid-template-columns:.55fr repeat(5,1fr)}[data-page="participate"] .partner-options>div{padding-right:15px}
 }
 @media(prefers-reduced-motion:reduce){.photo-card,.news-feature,.media-item img,.project-card img{transition:none}.photo-card:hover>img,.media-item:hover>img,.project-card:hover>img{transform:none}}
+.result-grid>div{min-width:0}.topic-result>span:first-child{min-width:0;overflow-wrap:anywhere}
+@media(min-width:1100px){.result-grid{grid-template-columns:minmax(0,5fr) minmax(0,6fr) minmax(0,9fr)}}
 @media(max-width:1200px){.sidebar nav button{padding:13px 18px;font-size:12px}}@media(max-width:900px){.sidebar nav button{padding:13px;font-size:11px;gap:10px}}@media(max-width:640px){.sidebar nav button{width:auto;flex:none;padding:10px;font-size:10px;gap:7px;white-space:nowrap;border:0}}

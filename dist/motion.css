@@ -1,0 +1,85 @@
+/* Presentation effects preserve the final geometry and never hide content at rest. */
+.motion-atmosphere {position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:1;border-radius:inherit}
+.motion-atmosphere::before,.motion-atmosphere::after {content:"";position:absolute;inset:-20%;pointer-events:none}
+.motion-atmosphere::before {background:radial-gradient(ellipse at 60% 10%,#78eec125,transparent 45%),radial-gradient(ellipse at 80% 50%,#b2ddff12,transparent 40%)}
+.motion-atmosphere::after {background:linear-gradient(115deg,transparent 35%,#d2ffef0d 49%,transparent 62%)}
+.motion-atmosphere i {position:absolute;left:var(--mote-x);top:var(--mote-y);width:3px;height:3px;border-radius:50%;background:#e8fff4;box-shadow:0 0 9px #b8ffe8;opacity:0}
+.motion-ink {position:absolute;width:8px;height:8px;border-radius:50%;pointer-events:none;background:currentColor;z-index:2}
+.progress-bar > span {transform-origin:left center}
+
+@media (prefers-reduced-motion:no-preference) {
+  .fade-in {animation:none}
+  .btn,.tab,.table-pagination button {position:relative;overflow:hidden;isolation:isolate}
+  .btn,.account,.role-card,.tab,.table-pagination button,.channel-options button {
+    transition:transform .22s cubic-bezier(.2,.7,.2,1),box-shadow .25s,border-color .25s,background-color .25s,color .25s,opacity .2s;
+  }
+  .btn:active,.account:active,.tab:active,.role-card:active {transform:scale(.97)}
+  button:disabled {opacity:.65}
+  .btn.primary::before,.btn.mint::before,.btn.white::before {
+    content:"";position:absolute;inset:-60% -30%;pointer-events:none;
+    background:linear-gradient(105deg,transparent 35%,#ffffff3b 49%,transparent 63%);
+    transform:translateX(-110%);transition:transform .65s cubic-bezier(.2,.7,.2,1);
+  }
+  .btn:focus-visible,.account:focus-visible,.tab:focus-visible {box-shadow:0 0 0 4px #54bda52e}
+  input:not([type=checkbox]):not([type=radio]),textarea,select,.upload-zone {
+    transition:border-color .2s,box-shadow .25s,background-color .2s;
+  }
+  input:focus,textarea:focus,select:focus,.upload-zone:focus-within {box-shadow:0 0 0 4px #54bda51e}
+  .switch span,.switch span::before {transition:transform .25s,left .25s,background-color .25s}
+  .sidebar nav a,.topnav a,.article-toc a,.footer-links a {transition:color .2s,background-color .2s,transform .2s}
+  .dropdown {transform-origin:top center;animation:motion-menu .2s ease-out}
+  .topnav.open {animation:motion-menu .25s ease-out}
+  .card,.metric,.file-card,.project-card,.photo-card,.media-item,.news-list>a,.news-mini,.feature,.role-card {
+    transition:transform .3s cubic-bezier(.2,.7,.2,1),box-shadow .3s,border-color .3s;
+  }
+  .photo-card img,.project-card img,.media-item img,.news-mini img {transition:transform .65s cubic-bezier(.2,.7,.2,1),filter .4s}
+  .arrow-circle {transition:transform .3s cubic-bezier(.2,.7,.2,1),background-color .25s,box-shadow .3s}
+  .data-table tbody tr {transition:background-color .2s}
+  .data-table tbody tr:hover {background-color:#54bda50c}
+  .progress-step.done > span {animation:motion-complete 1.5s ease-out 2}
+  .progress-bar > span {transition:width .55s cubic-bezier(.2,.7,.2,1)}
+  dialog[open] {animation:motion-dialog .28s cubic-bezier(.2,.7,.2,1)}
+  dialog[open]::backdrop {animation:motion-backdrop .28s ease-out}
+  dialog[open] #dialog-body > * {animation:motion-content .3s cubic-bezier(.2,.7,.2,1)}
+  #toast {transition:opacity .25s,transform .35s cubic-bezier(.2,.7,.2,1)}
+  #toast.visible {animation:motion-toast .35s cubic-bezier(.2,.7,.2,1)}
+  .motion-atmosphere::before {translate:var(--scene-x,0px) var(--scene-y,0px);transition:translate .7s ease-out;animation:motion-aurora 14s ease-in-out infinite alternate}
+  .motion-atmosphere::after {animation:motion-light 18s ease-in-out infinite}
+  .motion-atmosphere i {animation:motion-mote 10s ease-in-out infinite;animation-delay:var(--mote-delay)}
+  .motion-atmosphere::before,.motion-atmosphere::after,.motion-atmosphere i {animation-play-state:paused}
+  [data-motion-active="true"] > .motion-atmosphere::before,
+  [data-motion-active="true"] > .motion-atmosphere::after,
+  [data-motion-active="true"] > .motion-atmosphere i {animation-play-state:running}
+  body[data-motion-paused="true"] .motion-atmosphere::before,
+  body[data-motion-paused="true"] .motion-atmosphere::after,
+  body[data-motion-paused="true"] .motion-atmosphere i {animation-play-state:paused}
+}
+
+@media (prefers-reduced-motion:no-preference) and (hover:hover) and (pointer:fine) {
+  .btn:hover,.account:hover {transform:translateY(-2px);box-shadow:0 7px 22px #0317251e}
+  .btn:hover::before {transform:translateX(110%)}
+  .btn:hover .arrow-circle,.photo-card:hover .arrow-circle,.project-card:hover .arrow-circle {transform:rotate(-12deg);box-shadow:0 4px 16px #54bda54d}
+  .card:hover,.metric:hover,.file-card:hover {transform:translateY(-3px);box-shadow:0 12px 30px #0317250e;border-color:#54bda570}
+  .photo-card:hover,.project-card:hover,.media-item:hover,.role-card:hover,.news-list>a:hover,.news-mini:hover {transform:translateY(-5px);box-shadow:0 16px 32px #03172524}
+  .photo-card:hover img,.project-card:hover img,.media-item:hover img {transform:scale(1.055);filter:saturate(1.08)}
+  .news-mini:hover img {filter:saturate(1.08)}
+  .feature:hover {transform:translateY(-3px)}
+  .sidebar nav a:hover {transform:translateX(3px)}
+  .upload-zone:hover {border-color:var(--mint);box-shadow:0 0 0 4px #54bda514}
+}
+
+@media (max-width:640px) {.motion-atmosphere i {display:none}}
+@media (prefers-reduced-motion:reduce) {
+  .motion-atmosphere,.motion-ink {display:none}
+  .motion-atmosphere,.progress-bar > span {transform:none}
+}
+
+@keyframes motion-menu {from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
+@keyframes motion-dialog {from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes motion-content {from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+@keyframes motion-backdrop {from{opacity:0}to{opacity:1}}
+@keyframes motion-toast {from{opacity:0;transform:translate(-50%,12px)}to{opacity:1;transform:translate(-50%,0)}}
+@keyframes motion-complete {0%{box-shadow:0 0 0 0 #54bda530}100%{box-shadow:0 0 0 12px #54bda500}}
+@keyframes motion-aurora {from{transform:translate(-2%,0) rotate(-3deg);opacity:.65}to{transform:translate(2%,3%) rotate(3deg);opacity:1}}
+@keyframes motion-light {0%,100%{transform:translateX(-8%);opacity:0}40%,65%{transform:translateX(8%);opacity:1}}
+@keyframes motion-mote {0%,100%{transform:translateY(8px);opacity:0}30%,65%{opacity:.4}80%{transform:translateY(-24px);opacity:0}}
