@@ -1,3 +1,5 @@
+import {mediaLibrary} from './media-library.js';
+import {initMediaPlayer,filmMarkup,bindFilm,stopFilm,stopPageMedia} from './media-player.js';
 import {articlePage} from './articles.js';
 import {analyticsPage,updateAnalytics} from './analytics.js';
 import {refineLayout,selectSection,paginateTables} from './fidelity.js';
@@ -10,21 +12,21 @@ import { S,esc,icon,link,button,roles,roleHome,screenMap,field,select,brand,date
 import { publicPages,archiveItems } from './public.js';
 import { accountPages,currentProject } from './account.js';
 import { adminPages,contentTable } from './admin.js';
-const pages={...publicPages,...accountPages,...adminPages,analytics:analyticsPage,bear:articlePage};
+const pages={...publicPages,...accountPages,...adminPages,analytics:analyticsPage,bear:articlePage,media:mediaLibrary};
 const app=document.querySelector('#app'),dialog=document.querySelector('#dialog'),dialogBody=document.querySelector('#dialog-body');
 let route='home',timer=null,sequence=0,toastTimer=null,slide=0,contentMode=0,settingsMarkup='';
 const needed={dashboard:'participant',profile:'participant',mentor:'participant',security:'participant','test-intro':'participant',test:'participant','test-result':'participant',achievements:'participant',submit:'participant',project:'participant','project-results':'participant',defense:'participant',teacher:'teacher',expert:'expert',evaluation:'expert',ranking:'commission',admin:'admin',content:'admin',settings:'admin',questions:'admin',users:'admin',distribution:'admin',mailing:'admin',analytics:'admin'};
 export async function api(path,data){const res=await fetch('/api/'+path,{method:data===undefined?'GET':'POST',headers:data===undefined?{}:{'Content-Type':'application/json'},body:data===undefined?undefined:JSON.stringify(data)});const json=await res.json();if(!res.ok)throw Error(json.error||'Ошибка запроса');return json;}
 async function refresh(){Object.assign(S,await api('bootstrap'));}
 function toast(message){const el=document.querySelector('#toast');el.textContent=message;el.classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('visible'),4500);}
-function modal(html){dialogBody.innerHTML=html;if(!dialog.open)dialog.showModal();dialogBody.querySelector('input,button,a')?.focus();}
-function close(){if(dialog.open)dialog.close();dialogBody.replaceChildren();}
+function modal(html){stopFilm(dialogBody);dialogBody.innerHTML=html;if(!dialog.open)dialog.showModal();dialogBody.querySelector('input,button,a')?.focus();}
+function close(){stopFilm(dialogBody);if(dialog.open)dialog.close();dialogBody.replaceChildren();}
 async function go(id){const hash='#/'+id;if(location.hash!==hash)history.pushState(null,'',hash);await render();}
 function formError(form,e){const el=form.querySelector('.form-error');if(el)el.textContent=e.message;else toast(e.message);}
 function values(form){return Object.fromEntries(new FormData(form));}
 function counters(){document.querySelectorAll('[data-counter]').forEach(el=>{const target=document.querySelector(`[data-counter-for="${el.name}"]`);if(target)target.textContent=el.value.length+'/'+el.dataset.counter;});}
 async function render(){
- const key=++sequence;clearInterval(timer);close();
+ const key=++sequence;clearInterval(timer);stopPageMedia(app);close();
  const [path,query='']=location.hash.replace(/^#\/?/,'').split('?');route=path||'home';const params=new URLSearchParams(query);if(params.get('id'))S.selectedProject=params.get('id');
  try{await refresh();if(key!==sequence)return;
  const screen=screens.find(x=>x.id===route);document.title=(screen?.title||'Страница не найдена')+' — Арктика';
@@ -76,7 +78,7 @@ const actions={
  'scroll-route':()=>document.querySelector('#route')?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}),
  'scroll-section':selectSection,
  image:el=>modal(`<img class="modal-image" src="${esc(imageFile(el.dataset.image))}" alt="Арктика">`),
- video:()=>modal(`<h2>Почувствуй Арктику</h2><div class="arctic-film"><img src="assets/hero.webp" alt="Арктическая сцена с белым медведем"><div class="film-caption">Удивительная и неизведанная Арктика</div></div><p>В исходных материалах видео отсутствует. Здесь показана анимированная обложка; видео можно подключить в CMS.</p>`),
+ video:()=>{modal(filmMarkup());bindFilm(dialogBody);},
  'archive-detail':el=>{const p=archiveItems().find(p=>p.id===el.dataset.id);if(p)modal(`<h2>${esc(p.name)}</h2>${photoSafe(p.image)}<p>Номинация: ${esc(p.nomination)} · ${esc(p.year)}</p><p>Автор: ${esc(p.author)}</p><p>${esc(p.annotation||'Демонстрационная работа из архива конкурса. Приватные файлы участника здесь не публикуются.')}</p>`);},
  'history-result':()=>modal(`<h2>Итоги конкурса</h2><p>4 200 участников · 78 регионов · 312 проектов</p><p>Демонстрационная статистика из исходного макета.</p>${link('archive','Смотреть проекты →','btn mint')}`),
  'edit-profile':el=>{const p=S.user.profile,guardian=el.dataset.profileSection==='guardian';modal(`<h2>${guardian?'Контакты и законный представитель':'Основная информация'}</h2><form data-form="profile"><div class="form-grid">${S.user.role!=='participant'?adultProfileFields():guardian?field('ФИО представителя','parent',p.parent)+field('Телефон представителя','phone',p.phone,'tel')+field('Email представителя','parentEmail',p.parentEmail,'email'):field('ФИО *','name',p.name,'text','required maxlength="200"')+field('Дата рождения','birth',p.birth||'','date')+field('Класс','grade',p.grade||'','number','min="1" max="11"')+field('Школа','school',p.school)+field('Регион','region',p.region)}</div><p class="form-error" role="alert"></p><button class="btn mint wide">Сохранить</button></form>`);},
@@ -176,4 +178,4 @@ function onTab(tab){const bar=tab.closest('[data-tabs]')||tab.parentElement,key=
  if(key==='evaluation'){const area=document.querySelector('[data-evaluation-files]');if(area)area.outerHTML=evaluationFiles(currentProject(),i);}
  paginateTables(true);
 }
-document.querySelector('.dialog-close').addEventListener('click',close);dialog.addEventListener('close',()=>{if(!dialog.open)dialogBody.replaceChildren();});dialog.addEventListener('click',e=>{if(e.target===dialog)close();});window.addEventListener('hashchange',render);initMotion(app,dialog);await render();
+document.querySelector('.dialog-close').addEventListener('click',close);dialog.addEventListener('cancel',()=>stopFilm(dialogBody));dialog.addEventListener('close',()=>{if(!dialog.open){stopFilm(dialogBody);dialogBody.replaceChildren();}});dialog.addEventListener('click',e=>{if(e.target===dialog)close();});window.addEventListener('hashchange',render);document.addEventListener('arctic-media-status',e=>toast(e.detail));initMediaPlayer();initMotion(app,dialog);await render();
