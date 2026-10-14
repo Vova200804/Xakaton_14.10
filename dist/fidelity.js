@@ -31,24 +31,6 @@ export function refineLayout(route){
  const main=document.querySelector('#main'),tabs=main?.querySelector('.tabs');
  const nav=document.querySelector('.sidebar nav');
  const navAction=(label,action,glyph,attrs='')=>`<button type="button" data-action="${action}" ${attrs.replaceAll('data-key','data-nav-key').replaceAll('data-tab','data-nav-tab')}>${icon(glyph)}${label}</button>`;
- if(nav&&['admin','content','settings','questions'].includes(route)){
-  let items=[link('admin',icon('home')+'Обзор',route==='admin'?'active':''),link('users',icon('users')+'Участники'),link('distribution',icon('file')+'Проекты')];
-  if(route==='admin')items.push(navAction('Регионы','region-list','pin'),navAction('Школы','school-list','cap'),link('settings',icon('settings')+'Конкурс'),link('analytics',icon('chart')+'Отчёты'),link('users',icon('user')+'Пользователи'),link('settings',icon('settings')+'Настройки'));
-  if(route==='content')items=[link('admin',icon('home')+'Обзор'),link('content',icon('book')+'Контент','active'),...['Страницы','Новости','Видео','Баннеры','Комментарии'].map((t,i)=>navAction(t,'nav-tab',['file','book','video','grid','mail'][i],`data-key="content" data-tab="${i}"`)),navAction('Медиабиблиотека','nav-focus','grid','data-selector=".media-library"'),link('settings',icon('settings')+'Настройки')];
-  if(route==='settings')items.push(link('settings',icon('settings')+'Конкурс','active'),...['Настройки','Этапы','Номинации','Критерии оценки'].map((t,i)=>navAction(t,'nav-tab','file',`data-key="settings" data-tab="${[3,0,1,2][i]}"`)),link('questions',icon('book')+'Банк вопросов'),link('analytics',icon('chart')+'Отчёты'),link('admin',icon('settings')+'Настройки'));
-  if(route==='questions')items.push(link('settings',icon('settings')+'Конкурс'),link('questions',icon('book')+'Банк вопросов','active'),navAction('Вопросы','nav-focus','file','data-selector=".question-admin .data-table"'),navAction('Темы','nav-focus','book','data-selector="[name=question-topic]"'),navAction('Настройки ГПВ','nav-focus','settings','data-selector=".sampling-card"'),navAction('Статистика','question-stats','chart'),link('analytics',icon('chart')+'Отчёты'),link('settings',icon('settings')+'Настройки'));
-  nav.innerHTML=items.join('');
- }
- if(nav&&(['teacher','expert','evaluation','ranking'].includes(route)||nav.closest('.workspace')?.dataset.role==='teacher')){
-  const isTeacher=nav.closest('.workspace')?.dataset.role==='teacher';const home=isTeacher?'teacher':route==='ranking'?'ranking':'expert';
-  const items=[link(isTeacher?'teacher?view=overview':home,icon('home')+'Рабочий стол',route==='teacher'&&new URLSearchParams(location.hash.split('?')[1]||'').get('view')==='overview'?'active':'')];
-  if(isTeacher)items.push(link('teacher',icon('users')+'Мои ученики',route==='teacher'&&new URLSearchParams(location.hash.split('?')[1]||'').get('view')!=='overview'?'active':''),link('teacher?view=invitations',icon('mail')+'Приглашения'),navAction('Проекты','teacher-projects','file'),link('teacher?view=certificate',icon('trophy')+'Сертификаты'));
-  if(route==='expert')items.push(link('expert',icon('users')+'Мои задания','active'),navAction('Все работы','reset-filters','file'),navAction('Номинации','nomination-list','home'),navAction('Рекомендации','expert-comments','check'));
-  if(route==='evaluation')items.push(link('evaluation',icon('file')+'Оценка проекта','active'),navAction('Критерии','nav-focus','book','data-selector="[data-weight]"'),navAction('Мои замечания','nav-focus','edit','data-selector="[name=comment]"'));
-  if(route==='ranking')items.push(link('ranking',icon('users')+'Комиссия / Рейтинг','active'),link('archive',icon('file')+'Проекты'),navAction('Номинации','nomination-list','home'),link('documents',icon('book')+'Материалы'),link('documents',icon('trophy')+'Сертификаты'));
-  if(route!=='ranking')items.push(link('documents',icon('book')+'Материалы'));
-  items.push(navAction('Профиль','account-profile','user'));nav.innerHTML=items.join('');
- }
  if(['rules','bear'].includes(route)){
   const article=main.querySelector(route==='rules'?'[data-rules-doc]':'.article-text');
   article?.querySelectorAll(':scope > section').forEach((s,i)=>s.hidden=i>0);
@@ -57,9 +39,7 @@ export function refineLayout(route){
    const title=article.querySelector('h2'),meta=title.nextElementSibling,heading=document.createElement('div');heading.className='document-heading';heading.append(title,meta);main.querySelector('.faq-layout').before(heading);
    const download=article.querySelector('.btn');if(download){download.classList.add('tab-download');tabs.append(download);}
   }else{
-   const paragraph=article.querySelector('section p');paragraph?.insertAdjacentHTML('afterend','<p>Белый медведь играет важную роль в арктических экосистемах. Морской лёд служит ему площадкой для охоты и перемещений, поэтому сохранение его среды обитания напрямую связано с будущим Арктики.</p>');
    main.querySelector('.article-aside .card')?.classList.add('next-article');
-   const video=main.querySelector('.article-aside .media-item img');if(video)video.src=imageFile('bear-swimming');
   }
  }
  if(route==='about'){
@@ -80,7 +60,7 @@ export function refineLayout(route){
  }
  if(['documents','explore','media','archive','news','contacts'].includes(route))main.querySelector('.breadcrumbs')?.remove();
  if(['users','mailing'].includes(route)){
-  const header=document.querySelector('.topbar');header.querySelector('.topnav').innerHTML=link('admin','Администратор','admin-role-chip');header.querySelector('.topnav').classList.add('ops-nav');
+  const nav=document.querySelector('.topbar .topnav');if(nav){nav.innerHTML=link('admin','Администратор','admin-role-chip');nav.classList.add('ops-nav');}
  }
  if(route==='questions'){
   const notice=main.querySelector('.question-admin > .card .notice');if(notice){notice.className='sampling-card';notice.innerHTML=`<h3>${icon('settings')} Настройки выборки</h3><p>Вопросы выбираются случайно из опубликованного банка. Участник выбирает 5, 10 или 15 вопросов перед началом.</p><div class="sampling-options"><span>Количество вопросов<br><strong>5 / 10 / 15</strong></span><span>Время теста<br><strong>10 / 15 / 20 минут</strong></span></div>`;}

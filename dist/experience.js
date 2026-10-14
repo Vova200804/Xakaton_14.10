@@ -5,7 +5,7 @@ export function privacyContent() {
 }
 
 export function wrapCabinet(app, route) {
- const allowed=['dashboard','test-intro','test','test-result','submit','documents'];
+ const allowed=['dashboard','test-intro','test','test-result','submit','documents','users','mailing','archive'];
  if (!S.user || !allowed.includes(route) || app.querySelector('.workspace,.auth-content')) return;
  const main=app.querySelector('#main');
  if (!main) return;
