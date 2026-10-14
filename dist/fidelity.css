@@ -19,7 +19,7 @@ body,input,select,textarea,button{font-family:ArcticManrope,Manrope,sans-serif}
 .sampling-card{border-top:1px solid var(--line);margin-top:25px;padding-top:22px}.sampling-card p{font-size:13px}.sampling-options{display:flex;gap:25px;line-height:1.8;font-size:12px}
 .code-field{position:relative}.code-field input{padding-right:125px}.code-field [data-action="code"]{position:absolute;right:14px;bottom:17px;font-size:12px;margin:0}
 .ops-nav{justify-content:flex-start}.admin-role-chip{border:1px solid #ffffff55;border-radius:25px;padding:8px 18px!important;font-size:13px!important;letter-spacing:0!important}
-body[data-route="login"] [data-action="demo"]{display:none}body:has(.all-screens)[data-route="login"] [data-action="demo"]{display:flex}
+.auth-current-account{display:flex;justify-content:flex-end;margin-bottom:18px}.auth-current-account .btn{max-width:100%}.account-details{margin:25px 0}.account-actions .btn{justify-content:center}
 body:is([data-route="dashboard"],[data-route="test-intro"],[data-route="test"],[data-route="test-result"],[data-route="submit"],[data-route="users"],[data-route="mailing"]) .footer{display:none}
 .photo-card,.news-feature,.media-item img,.project-card img{transition:transform .35s ease,filter .35s ease}.photo-card:hover>img,.media-item:hover>img,.project-card:hover>img{transform:scale(1.025)}
 @media(min-width:1201px){

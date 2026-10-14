@@ -47,7 +47,7 @@ export function refineLayout(route){
   if(route==='evaluation')items.push(link('evaluation',icon('file')+'Оценка проекта','active'),navAction('Критерии','nav-focus','book','data-selector="[data-weight]"'),navAction('Мои замечания','nav-focus','edit','data-selector="[name=comment]"'));
   if(route==='ranking')items.push(link('ranking',icon('users')+'Комиссия / Рейтинг','active'),link('archive',icon('file')+'Проекты'),navAction('Номинации','nomination-list','home'),link('documents',icon('book')+'Материалы'),link('documents',icon('trophy')+'Сертификаты'));
   if(route!=='ranking')items.push(link('documents',icon('book')+'Материалы'));
-  items.push(navAction('Профиль','account','user'));nav.innerHTML=items.join('');
+  items.push(navAction('Профиль','account-profile','user'));nav.innerHTML=items.join('');
  }
  if(['rules','bear'].includes(route)){
   const article=main.querySelector(route==='rules'?'[data-rules-doc]':'.article-text');
