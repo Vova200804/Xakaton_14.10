@@ -1,0 +1,11 @@
+node_modules
+artifacts
+var
+docs
+tests
+.git
+.openai
+*.zip
+.env
+.env.*
+!.env.example

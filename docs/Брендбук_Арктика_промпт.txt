@@ -1,0 +1,14 @@
+Инструмент: встроенный ImageGen
+
+Use case: logo-brand. Create a polished single-image brand guidelines board for the Russian school research competition «АРКТИКА». Landscape editorial board, high resolution, flat front-facing graphic design ready to show at a design defense, not a photograph of a book. Use the supplied existing home screen solely as brand/style reference: retain its recognizable white polar bear silhouette in a thin circle with subtle compass crosshair, widely tracked АРКТИКА wordmark, navy Arctic atmosphere, snowy mountains, mint accent, warm white workspace. No redesign into a different brand.
+
+Composition: exact aligned spacious grid, refined typography, generous margins, readable Russian labels and restrained short copy. Top navy masthead across width: white bear logo plus large «АРКТИКА», below «Удивительная и неизведанная», small «БРЕНДБУК». Main warm white area with six clearly numbered editorial sections in a harmonious 3-column by 2-row grid, separated by thin gray rules. One scenic photography strip of mountains/ice/aurora with a realistic polar bear can sit across the bottom or inside imagery section. Keep text minimal and correctly spelled.
+
+Section 01 «ЛОГОТИП»: display the same mark + wordmark in navy on light, then white on navy, showing both alternatives clearly. Small caption «Символ Арктики и исследования».
+Section 02 «ПАЛИТРА»: exactly three large color chips with exact printed labels «#031725», «#F9F8F5», «#54BDA5». Captions respectively «Арктический синий», «Тёплый белый», «Ледниковая мята». Navy used for depth and masthead, warm white for canvas, mint only accents.
+Section 03 «ТИПОГРАФИКА»: label «Manrope», elegant specimen «Аа Бб Вв 0123», heading sample «Исследуй Арктику», short paragraph sample «Большое путешествие начинается с любопытства». Strong hierarchy, clean contemporary Cyrillic sans serif. Do not use Anton label or claim it supports Cyrillic.
+Section 04 «ОБРАЗЫ»: beautiful compact photographic crop matching supplied Arctic reference, ice and aurora with polar bear. Caption «Лёд · Горы · Северное сияние».
+Section 05 «ЭЛЕМЕНТЫ ИНТЕРФЕЙСА»: mint filled rounded button «Начать путешествие →», navy outlined button «Подать проект», clean input labeled «Название проекта», small mint status badge «Проверено». UI examples must be legible and coherent.
+Section 06 «ПРИМЕНЕНИЕ»: two compact realistic webpage thumbnails, public hero dark Arctic bear mountain scene and light participant dashboard with navy sidebar, mint progress and cards; use little thumbnail text only label «Публичный сайт» and «Личный кабинет».
+
+Avoid long paragraphs, random English, illegible microcopy, tilted perspective, mockup device frames, watermark, visual clutter. Prioritize clean Russian typography and fidelity to the reference palette and logo. This is an image of the brandbook itself, not instruction text on how to make one.

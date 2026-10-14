@@ -1,0 +1,111 @@
+{
+  "tool": "Built-in image_gen.imagegen",
+  "reference": "approved-home.png",
+  "style": "ui-mockup; four desktop screens in a 2x2 sheet; midnight navy, warm ivory, glacier mint, Arctic photography, bear circle logo, large Cyrillic text, private role workspaces; unknown organizational data must be placeholders",
+  "screens": [
+    {
+      "file": "01-public.png",
+      "title": "Главная и конкурс",
+      "screens": [
+        "Главная",
+        "О конкурсе",
+        "История конкурса",
+        "Положение и FAQ"
+      ]
+    },
+    {
+      "file": "02-participation.png",
+      "title": "Участие и обучение",
+      "screens": [
+        "Участникам",
+        "Шаблоны документов",
+        "Исследуй Арктику",
+        "Статья о белом медведе"
+      ]
+    },
+    {
+      "file": "03-media-news.png",
+      "title": "Медиатека и новости",
+      "screens": [
+        "Медиатека",
+        "Архив проектов",
+        "Новости",
+        "Страница новости"
+      ]
+    },
+    {
+      "file": "04-contact-auth.png",
+      "title": "Контакты и вход",
+      "screens": [
+        "Партнёрам",
+        "Контакты",
+        "Вход",
+        "Регистрация"
+      ]
+    },
+    {
+      "file": "05-participant.png",
+      "title": "Кабинет участника",
+      "screens": [
+        "Обзор участника",
+        "Мой профиль",
+        "Мой руководитель",
+        "Безопасность аккаунта"
+      ]
+    },
+    {
+      "file": "06-test-cert.png",
+      "title": "Тест и сертификаты",
+      "screens": [
+        "Перед тестом",
+        "Прохождение теста",
+        "Результат теста",
+        "Мои достижения"
+      ]
+    },
+    {
+      "file": "07-projects.png",
+      "title": "Проект и защита",
+      "screens": [
+        "Подать проект",
+        "Мой проект",
+        "Результаты проекта",
+        "ВКС-защита"
+      ]
+    },
+    {
+      "file": "08-teacher-expert-final.png",
+      "title": "Педагог, эксперт и комиссия",
+      "screens": [
+        "Комиссия / Рейтинг",
+        "Кабинет педагога",
+        "Кабинет эксперта",
+        "Оценка проекта"
+      ]
+    },
+    {
+      "file": "09-admin.png",
+      "title": "Конкурс и контент",
+      "screens": [
+        "Обзор администратора",
+        "Управление контентом",
+        "Настройки конкурса",
+        "Банк вопросов"
+      ]
+    },
+    {
+      "file": "10-admin-ops-final.png",
+      "title": "Люди и отчёты",
+      "screens": [
+        "Пользователи и согласия",
+        "Проекты и распределение",
+        "Рассылки и интеграции",
+        "Аналитика и отчёты"
+      ]
+    }
+  ],
+  "revisions": {
+    "08": "Replace repeated public homepage with private commission ranking while preserving teacher and expert screens.",
+    "10": "All four operational screens are private administrator views; correct roles and labels, add analytics filters."
+  }
+}

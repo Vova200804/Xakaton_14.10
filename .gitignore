@@ -1,0 +1,10 @@
+node_modules/
+artifacts/
+.sites/
+*.zip
+var/
+.env
+.env.*
+!.env.example
+.vercel/
+.openai/

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "buildCommand": "pnpm run build",
+  "outputDirectory": "dist",
+  "functions": {
+    "api/index.mjs": {
+      "maxDuration": 60,
+      "includeFiles": "dist/assets/manrope-2.woff2"
+    }
+  },
+  "rewrites": [
+    { "source": "/api/:path*", "destination": "/api/index?route=:path*" }
+  ]
+}
