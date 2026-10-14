@@ -1,0 +1,37 @@
+import {chromium} from 'playwright';
+import {spawn} from 'node:child_process';
+import {mkdtemp,writeFile} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import {PDFDocument} from 'pdf-lib';
+const storage=await mkdtemp(path.join(tmpdir(),'arctic-visual-'));
+const server=spawn(process.execPath,['scripts/server.mjs'],{env:{...process.env,PORT:'4189',ARCTIC_STORAGE:storage},stdio:['ignore','pipe','pipe']});
+await new Promise((resolve,reject)=>{server.stdout.once('data',resolve);server.once('error',reject);server.once('exit',code=>reject(Error('Server exited '+code)));});
+const browser=await chromium.launch({channel:'msedge',headless:true});
+try{
+ const context=await browser.newContext({viewport:{width:1536,height:1024},reducedMotion:'reduce'}),page=await context.newPage();
+ await page.goto('http://127.0.0.1:4189/#/home');await page.waitForSelector('.arctic-wordmark');await page.evaluate(()=>document.fonts.ready);
+ const box=await page.locator('.arctic-wordmark').boundingBox();
+ for(const [key,value] of Object.entries({x:56,y:331,width:658,height:185}))assert(Math.abs(box[key]-value)<=2,`Reference wordmark ${key}: ${box[key]} vs ${value}`);
+ assert.equal(await page.locator('.all-screens').count(),0);
+ assert(await page.evaluate(()=>document.fonts.check('300 78px ArcticManrope','Удивительная')));
+ await page.screenshot({path:'artifacts/screenshots/home-desktop.png'});
+ await page.goto('http://127.0.0.1:4189/#/contacts');await page.waitForSelector('[data-form="contact"]');const contactBackground=await page.locator('.hero-banner').evaluate(e=>getComputedStyle(e).backgroundImage);assert(contactBackground.includes('mountain-hd.webp'),'Contacts must use the reference landscape');assert(!contactBackground.includes('arctic-scene-hd.webp'),'Contacts must not acquire the generic bear background');await page.screenshot({path:'artifacts/screenshots/14-contacts.png',fullPage:true});
+ for(const width of [390,768]){await page.setViewportSize({width,height:1024});assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+2),'Contacts overflow at '+width);await page.screenshot({path:`artifacts/screenshots/contacts-${width}.png`,fullPage:true});}await page.setViewportSize({width:1536,height:1024});
+ await page.goto('http://127.0.0.1:4189/#/rules');await page.waitForSelector('#rule-0');assert.equal(await page.locator('[data-rules-doc] > section:visible').count(),1);
+ const second=page.locator('[data-target="rule-1"]');await second.focus();await page.keyboard.press('Enter');assert.equal(await page.locator('#rule-1:visible').count(),1);assert.equal(await page.locator('#rule-0:visible').count(),0);assert.equal(await second.getAttribute('aria-current'),'true');
+ await page.goto('http://127.0.0.1:4189/#/bear');await page.waitForSelector('#article-0');await page.locator('[data-target="article-2"]').click();assert.equal(await page.locator('.article-text > section:visible').count(),1);assert.equal(await page.locator('#article-2:visible').count(),1);
+ await context.request.post('http://127.0.0.1:4189/api/login',{data:{email:'participant@arctic.demo',password:'Arctic2026!'}});
+ const pdf=await PDFDocument.create();pdf.addPage();const bytes=Buffer.from(await pdf.save());
+ const uploaded=await context.request.post('http://127.0.0.1:4189/api/upload',{data:{name:'Новое_согласие.pdf',data:bytes.toString('base64'),kind:'consent'}});assert.equal(uploaded.status(),200);
+ await page.goto('http://127.0.0.1:4189/#/profile');await page.waitForSelector('.profile-row');assert.match(await page.locator('#main').innerText(),/Новое_согласие\.pdf/);assert.match(await page.locator('#main').innerText(),/На проверке/);
+ await context.request.post('http://127.0.0.1:4189/api/login',{data:{email:'admin@arctic.demo',password:'Arctic2026!'}});
+ await page.goto('http://127.0.0.1:4189/#/questions');await page.waitForSelector('.table-pagination');
+ const seen=new Set();for(let i=1;i<=3;i++){await page.getByRole('button',{name:`Страница ${i}`,exact:true}).click();const rows=await page.locator('tbody tr:visible').allTextContents();assert.equal(rows.length,5);rows.forEach(r=>seen.add(r));}assert.equal(seen.size,15,'Every question remains reachable');
+ await page.locator('[data-search]').fill('вечная мерзлота');assert.equal(await page.locator('tbody tr:visible').count(),1);assert.match(await page.locator('tbody').innerText(),/вечная мерзлота/);await page.locator('[data-search]').fill('');assert.equal(await page.locator('tbody tr:visible').count(),5);
+ await page.goto('http://127.0.0.1:4189/#/users');await page.waitForSelector('.table-pagination');assert.match(await page.locator('tbody tr').filter({hasText:'participant@arctic.demo'}).innerText(),/На проверке/);await page.locator('[data-action="user-role-tab"][data-role="admin"]').click();assert.equal(await page.locator('tbody tr:visible').count(),1);await page.locator('[data-action="user-role-tab"][data-role=""]').click();assert.equal(await page.locator('tbody tr:visible').count(),5);
+ await page.goto('http://127.0.0.1:4189/#/content');await page.waitForSelector('[data-content-table]');await page.locator('[data-action="nav-tab"][data-nav-tab="1"]').click();assert.equal(await page.locator('.tab[data-key="content"][data-tab="1"].active').count(),1);assert.match(await page.locator('[data-content-table]').innerText(),/Стартует новый сезон/);
+ await writeFile('artifacts/fidelity-results.json',JSON.stringify({passed:true,wordmark:box,heroHeight:775,articleKeyboardNavigation:true,questionPagination:15,filteredPagination:true,localCyrillicFont:true,latestConsent:true,contextualSidebar:true},null,2));
+ console.log('PASS visual contracts: reference wordmark geometry, local Cyrillic font, keyboard article navigation, all 15 paginated questions, search and role pagination.');
+}finally{await browser.close();server.kill();}

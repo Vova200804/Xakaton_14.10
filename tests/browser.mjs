@@ -41,7 +41,7 @@ await page.setViewportSize({width:1536,height:1024});
 await page.goto(base+'/#/contacts');await page.waitForSelector('[data-form="contact"]');await page.locator('[name="name"]').fill('Проверка интерфейса');await page.locator('[name="email"]').fill('qa@example.test');await page.locator('[name="message"]').fill('Сообщение из браузерного теста');await page.getByRole('button',{name:'Отправить сообщение'}).click();await page.waitForSelector('#toast.visible');
 await page.goto(base+'/#/archive');await page.waitForSelector('[data-search]');await page.locator('[data-search]').fill('несуществующаяработа');if(await page.locator('[data-item]:visible').count()!==0)failures.push('Archive search failed');
 await page.locator('[data-search]').fill('');if(await page.locator('[data-item]:visible').count()!==8)failures.push('Archive reset failed');
-await page.locator('[data-action="screens"]').click();await page.waitForSelector('dialog[open]');if(await page.locator('dialog .screen-map a').count()!==40)failures.push('Screen map must include 40');await page.keyboard.press('Escape');if(await page.locator('dialog[open]').count())failures.push('Escape must close dialog');
+await page.goto(base+'/?dev=1#/archive');await page.waitForSelector('[data-action="screens"]');await page.locator('[data-action="screens"]').click();await page.waitForSelector('dialog[open]');if(await page.locator('dialog .screen-map a').count()!==40)failures.push('Screen map must include 40');await page.keyboard.press('Escape');if(await page.locator('dialog[open]').count())failures.push('Escape must close dialog');
 await writeFile('artifacts/browser-results.json',JSON.stringify({screens:40,widths:[1536,768,390],errors,failures},null,2));
 await browser.close();
 testServer?.kill();

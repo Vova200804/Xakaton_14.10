@@ -3,10 +3,24 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "scripts": {"dev":"node --env-file-if-exists=.env scripts/server.mjs", "start":"node --env-file-if-exists=.env scripts/server.mjs", "build":"node scripts/check.mjs", "test":"node tests/api.mjs && node tests/browser.mjs && node tests/flows.mjs"},
-  "engines": {"node":"24.x"},
+  "scripts": {
+    "dev": "node --env-file-if-exists=.env scripts/server.mjs",
+    "start": "node --env-file-if-exists=.env scripts/server.mjs",
+    "build": "node scripts/check.mjs",
+    "test": "node tests/api.mjs && node tests/browser.mjs && node tests/flows.mjs && node tests/fidelity.mjs"
+  },
+  "engines": {
+    "node": "24.x"
+  },
   "packageManager": "pnpm@10.28.2",
-  "dependencies": {"pdf-lib":"^1.17.1","@pdf-lib/fontkit":"^1.1.1","exceljs":"^4.4.0","qrcode":"^1.5.4"},
-  "devDependencies": {"playwright":"^1.56.0"},
+  "dependencies": {
+    "pdf-lib": "^1.17.1",
+    "@pdf-lib/fontkit": "^1.1.1",
+    "exceljs": "^4.4.0",
+    "qrcode": "^1.5.4"
+  },
+  "devDependencies": {
+    "playwright": "^1.56.0"
+  },
   "description": "40 экранов конкурса Арктика по предоставленным макетам."
 }
