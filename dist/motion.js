@@ -87,10 +87,24 @@ export function initMotion(app, dialog) {
           const atmosphere = document.createElement('div');
           atmosphere.className = 'motion-atmosphere';
           atmosphere.setAttribute('aria-hidden', 'true');
-          for (const [i, [x, y]] of [[12, 20], [30, 62], [51, 16], [72, 51], [88, 23], [42, 78]].entries()) {
-            const mote = document.createElement('i');
-            mote.style.cssText = `--mote-x:${x}%;--mote-y:${y}%;--mote-delay:-${i * 1.7}s`;
-            atmosphere.append(mote);
+          if (scene.matches('.home-hero')) {
+            const snow = document.createElement('div');
+            snow.className = 'motion-snow';
+            for (let i = 0; i < 48; i++) {
+              const flake = document.createElement('span');
+              const size = [1.5, 2, 2.5, 3, 4, 5][i % 6];
+              const duration = 15 - size * 1.4 + i % 3;
+              flake.className = 'motion-snowflake';
+              flake.style.cssText = `--snow-x:${(i * 37 + 11) % 100}%;--snow-size:${size}px;--snow-opacity:${.3 + (i % 5) * .1};--snow-duration:${duration}s;--snow-delay:${-i / 48 * duration}s;--snow-wind:${(i * 17) % 80 - 40}px`;
+              snow.append(flake);
+            }
+            atmosphere.append(snow);
+          } else {
+            for (const [i, [x, y]] of [[12, 20], [30, 62], [51, 16], [72, 51], [88, 23], [42, 78]].entries()) {
+              const mote = document.createElement('i');
+              mote.style.cssText = `--mote-x:${x}%;--mote-y:${y}%;--mote-delay:-${i * 1.7}s`;
+              atmosphere.append(mote);
+            }
           }
           scene.append(atmosphere);
         }

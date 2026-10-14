@@ -36,6 +36,9 @@ try {
  await jump('home');await page.evaluate(()=>document.fonts.ready);
  const hero=page.locator('.home-hero');await page.waitForFunction(()=>document.querySelector('.home-hero').dataset.motionActive==='true');
  assert.equal(await page.locator('.home-hero > .motion-atmosphere').count(),1);
+  assert.equal(await page.locator('.home-hero .motion-snowflake').count(),48);
+  const flakeY=await page.locator('.motion-snowflake').nth(10).evaluate(e=>e.getBoundingClientRect().y);
+  await page.waitForFunction(y=>document.querySelectorAll('.motion-snowflake')[10].getBoundingClientRect().y>y+3,flakeY);
  await hero.hover({position:{x:1500,y:220}});
  await page.waitForFunction(()=>document.querySelector('.home-hero').style.getPropertyValue('--scene-x')!=='');
  assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+2),'Pointer effect must stay inside hero');
@@ -43,6 +46,7 @@ try {
   await page.evaluate(()=>scrollTo({top:document.documentElement.scrollHeight,behavior:'instant'}));
  await page.waitForFunction(()=>document.querySelector('.home-hero').dataset.motionActive==='false');
  assert.equal(await hero.evaluate(e=>getComputedStyle(e.querySelector('.motion-atmosphere'),'::before').animationPlayState),'paused');
+  assert.equal(await page.locator('.motion-snowflake').first().evaluate(e=>getComputedStyle(e).animationPlayState),'paused');
   await page.setViewportSize({width:1536,height:1024});
  await page.evaluate(()=>scrollTo(0,0));
  const button=page.locator('.topbar [data-action="account"]');await button.waitFor();await button.hover();
@@ -58,12 +62,15 @@ try {
  await page.emulateMedia({reducedMotion:'no-preference'});await page.waitForFunction(()=>document.body.dataset.motionMode==='full');await page.evaluate(()=>scrollTo(0,0));
  await page.waitForFunction(()=>document.querySelector('.home-hero').dataset.motionActive==='true');
  assert.equal(await page.locator('.home-hero > .motion-atmosphere').count(),1,'Preference changes must not duplicate background layers');
+  assert.equal(await page.locator('.motion-snowflake').count(),48,'Preference changes must not duplicate snow');
   await context.request.post(base+'/api/login',{data:{email:'participant@arctic.demo',password:'Arctic2026!'}});
  for(const width of [390,768]){
   await page.setViewportSize({width,height:844});
   for(const id of ['home','login','dashboard','test-result','achievements']){
    await jump(id);await page.waitForFunction(()=>!!document.querySelector('[data-motion-seen="true"]'));
    assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+2),id+' overflow at '+width);
+   assert.equal(await page.locator('.motion-snow').count(),id==='home'?1:0,'Snow belongs only on the homepage');
+   if(id==='home'&&width===390)assert.equal(await page.locator('.motion-snowflake').evaluateAll(nodes=>nodes.filter(e=>getComputedStyle(e).display!=='none').length),24);
    await page.screenshot({path:`artifacts/screenshots/motion-${id}-${width}.png`});
   }
  }
