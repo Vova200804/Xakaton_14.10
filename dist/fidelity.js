@@ -39,10 +39,10 @@ export function refineLayout(route){
   if(route==='questions')items.push(link('settings',icon('settings')+'Конкурс'),link('questions',icon('book')+'Банк вопросов','active'),navAction('Вопросы','nav-focus','file','data-selector=".question-admin .data-table"'),navAction('Темы','nav-focus','book','data-selector="[name=question-topic]"'),navAction('Настройки ГПВ','nav-focus','settings','data-selector=".sampling-card"'),navAction('Статистика','question-stats','chart'),link('analytics',icon('chart')+'Отчёты'),link('settings',icon('settings')+'Настройки'));
   nav.innerHTML=items.join('');
  }
- if(nav&&['teacher','expert','evaluation','ranking'].includes(route)){
-  const home=route==='teacher'?'teacher':route==='ranking'?'ranking':'expert';
-  const items=[link(home,icon('home')+'Рабочий стол')];
-  if(route==='teacher')items.push(link('teacher',icon('users')+'Мои ученики','active'),link('teacher?view=invitations',icon('mail')+'Приглашения'),navAction('Проекты','teacher-projects','file'),link('teacher?view=certificate',icon('trophy')+'Сертификаты'));
+ if(nav&&(['teacher','expert','evaluation','ranking'].includes(route)||nav.closest('.workspace')?.dataset.role==='teacher')){
+  const isTeacher=nav.closest('.workspace')?.dataset.role==='teacher';const home=isTeacher?'teacher':route==='ranking'?'ranking':'expert';
+  const items=[link(isTeacher?'teacher?view=overview':home,icon('home')+'Рабочий стол',route==='teacher'&&new URLSearchParams(location.hash.split('?')[1]||'').get('view')==='overview'?'active':'')];
+  if(isTeacher)items.push(link('teacher',icon('users')+'Мои ученики',route==='teacher'&&new URLSearchParams(location.hash.split('?')[1]||'').get('view')!=='overview'?'active':''),link('teacher?view=invitations',icon('mail')+'Приглашения'),navAction('Проекты','teacher-projects','file'),link('teacher?view=certificate',icon('trophy')+'Сертификаты'));
   if(route==='expert')items.push(link('expert',icon('users')+'Мои задания','active'),navAction('Все работы','reset-filters','file'),navAction('Номинации','nomination-list','home'),navAction('Рекомендации','expert-comments','check'));
   if(route==='evaluation')items.push(link('evaluation',icon('file')+'Оценка проекта','active'),navAction('Критерии','nav-focus','book','data-selector="[data-weight]"'),navAction('Мои замечания','nav-focus','edit','data-selector="[name=comment]"'));
   if(route==='ranking')items.push(link('ranking',icon('users')+'Комиссия / Рейтинг','active'),link('archive',icon('file')+'Проекты'),navAction('Номинации','nomination-list','home'),link('documents',icon('book')+'Материалы'),link('documents',icon('trophy')+'Сертификаты'));
