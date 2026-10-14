@@ -6,6 +6,7 @@ import { api } from './api.mjs';
 const root = path.resolve(fileURLToPath(new URL('../dist/', import.meta.url)));
 const types = {'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.json':'application/json; charset=utf-8','.svg':'image/svg+xml','.webp':'image/webp','.png':'image/png','.woff2':'font/woff2','.pdf':'application/pdf','.csv':'text/csv; charset=utf-8'};
 const server = http.createServer(async (req,res)=>{
+  res.setHeader('X-Robots-Tag','noindex, nofollow');
   try {
     const url=new URL(req.url,'http://localhost');
     if(url.pathname.startsWith('/api/'))return api(req,res,url);

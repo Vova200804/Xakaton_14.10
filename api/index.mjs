@@ -1,6 +1,7 @@
 import { api } from '../scripts/api.mjs';
 
 export default async function handler(req,res){
+ res.setHeader('X-Robots-Tag','noindex, nofollow');
  const url=new URL(req.url,'http://localhost');
  const route=req.query?.route??url.searchParams.get('route');
  if(typeof route==='string')url.pathname='/api/'+route;

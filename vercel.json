@@ -9,6 +9,14 @@
       "includeFiles": "dist/assets/manrope-2.woff2"
     }
   },
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow" }
+      ]
+    }
+  ],
   "rewrites": [
     { "source": "/api/:path*", "destination": "/api/index?route=:path*" }
   ]
